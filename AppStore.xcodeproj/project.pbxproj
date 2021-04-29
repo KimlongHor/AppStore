@@ -37,6 +37,8 @@
 		60EC65A2262623D800F6BEA1 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC65A1262623D800F6BEA1 /* AppGroup.swift */; };
 		60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B1261F925C00502849 /* AppsPageController.swift */; };
 		60ECD9B5261F954E00502849 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B4261F954E00502849 /* BaseListController.swift */; };
+		60FC35BD263B6418004A9F49 /* AppFullscreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC35BC263B6418004A9F49 /* AppFullscreenController.swift */; };
+		60FC35C0263B6951004A9F49 /* AppFullscreenDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC35BF263B6951004A9F49 /* AppFullscreenDescriptionCell.swift */; };
 		60FF192825996408008C451C /* AppsSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF192725996408008C451C /* AppsSearchController.swift */; };
 		60FF192C2599687D008C451C /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF192B2599687D008C451C /* SearchResultCell.swift */; };
 		60FF1933259A9F02008C451C /* VerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF1931259A9F02008C451C /* VerticalStackView.swift */; };
@@ -80,6 +82,8 @@
 		60EC65A1262623D800F6BEA1 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		60ECD9B1261F925C00502849 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		60ECD9B4261F954E00502849 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
+		60FC35BC263B6418004A9F49 /* AppFullscreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFullscreenController.swift; sourceTree = "<group>"; };
+		60FC35BF263B6951004A9F49 /* AppFullscreenDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFullscreenDescriptionCell.swift; sourceTree = "<group>"; };
 		60FF192725996408008C451C /* AppsSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsSearchController.swift; sourceTree = "<group>"; };
 		60FF192B2599687D008C451C /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		60FF1931259A9F02008C451C /* VerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalStackView.swift; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				607AD4AC263A1427009E2088 /* TodayController.swift */,
+				60FC35BC263B6418004A9F49 /* AppFullscreenController.swift */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -133,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				607AD4B0263A14B5009E2088 /* TodayCell.swift */,
+				60FC35BF263B6951004A9F49 /* AppFullscreenDescriptionCell.swift */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -402,11 +408,13 @@
 				607AD4B1263A14B5009E2088 /* TodayCell.swift in Sources */,
 				6083B2B3259420E00008D5D4 /* ViewController.swift in Sources */,
 				6083B2AF259420E00008D5D4 /* AppDelegate.swift in Sources */,
+				60FC35C0263B6951004A9F49 /* AppFullscreenDescriptionCell.swift in Sources */,
 				608ECF3C2621005F0002FEFA /* AppsGroupCell.swift in Sources */,
 				60542713262A153500566BD7 /* HorizontalSnappingController.swift in Sources */,
 				60542716262A1CFD00566BD7 /* BetterSnappingLayout.swift in Sources */,
 				60FF192825996408008C451C /* AppsSearchController.swift in Sources */,
 				60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */,
+				60FC35BD263B6418004A9F49 /* AppFullscreenController.swift in Sources */,
 				60FF192C2599687D008C451C /* SearchResultCell.swift in Sources */,
 				6021AC512624D2D8007B8FC2 /* AppsHeaderHorizontalController.swift in Sources */,
 				6021AC4E2624D105007B8FC2 /* AppsPageHeader.swift in Sources */,

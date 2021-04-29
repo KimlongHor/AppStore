@@ -11,6 +11,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     fileprivate let cellId = "cellId"
     
+    var startingFrame: CGRect?
+    
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
@@ -33,13 +35,23 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         return cell
     }
     
+    var appFullscreenController: UIViewController!
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let redView = UIView()
-        redView.backgroundColor = .red
+        let appFullscreenController = AppFullscreenController()
+        
+        let redView = appFullscreenController.view!
         redView.layer.cornerRadius = 16
         redView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveRedView)))
         view.addSubview(redView)
+        
+        
+        // We need to use this function because we dont use navbar.push to push this controller.
+        // Also note that, if we add a child controller, we need to clean it afterward. (look at handleRemoveRedView func to see how to clean it)
+        addChild(appFullscreenController)
+        
+        self.appFullscreenController = appFullscreenController
         
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         
@@ -52,18 +64,24 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             redView.frame = self.view.frame
+            
+            self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
+            
         }, completion: nil)
 
-        
     }
-    
-    var startingFrame: CGRect?
     
     @objc func handleRemoveRedView(gesture: UITapGestureRecognizer) {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             gesture.view?.frame = self.startingFrame ?? .zero
+            
+            if let tabBarFrame = self.tabBarController?.tabBar.frame {
+                self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height - tabBarFrame.height
+            }
+            
         }, completion: { _ in
             gesture.view?.removeFromSuperview()
+            self.appFullscreenController.removeFromParent()
         })
 
     }
