@@ -11,11 +11,22 @@ class AppFullscreenController: UITableViewController {
     
     var dismissHandler: (()->())?
     
+    var todayItem: TodayItem? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.contentInsetAdjustmentBehavior = .never
+        
+        let height = UIApplication.shared.statusBarFrame.height
+        tableView.contentInset = .init(top: 0, left: 0, bottom: height, right: 0)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -26,7 +37,8 @@ class AppFullscreenController: UITableViewController {
         
         if indexPath.item == 0 {
             let cell = AppFullscreenHeaderCell()
-            cell.closeButton.addTarget(self, action: #selector(handleDimiss), for: .touchUpOutside)
+            cell.closeButton.addTarget(self, action: #selector(handleDimiss), for: .touchUpInside)
+            cell.todayCell.todayItem = todayItem
             return cell
         }
         
