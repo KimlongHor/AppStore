@@ -36,6 +36,8 @@
 		60BD9FB02637456B00FD27AB /* Reviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BD9FAF2637456B00FD27AB /* Reviews.swift */; };
 		60C1E3AD2628C850001556F7 /* SocialApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C1E3AC2628C850001556F7 /* SocialApp.swift */; };
 		60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C9E0DC262E0CC0009D770B /* AppDetailController.swift */; };
+		60CF12FE2641D14600707FD7 /* TodayMultipleAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */; };
+		60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF13002641DDED00707FD7 /* BaseTodayCell.swift */; };
 		60EC65A2262623D800F6BEA1 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC65A1262623D800F6BEA1 /* AppGroup.swift */; };
 		60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B1261F925C00502849 /* AppsPageController.swift */; };
 		60ECD9B5261F954E00502849 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B4261F954E00502849 /* BaseListController.swift */; };
@@ -83,6 +85,8 @@
 		60BD9FAF2637456B00FD27AB /* Reviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reviews.swift; sourceTree = "<group>"; };
 		60C1E3AC2628C850001556F7 /* SocialApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialApp.swift; sourceTree = "<group>"; };
 		60C9E0DC262E0CC0009D770B /* AppDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailController.swift; sourceTree = "<group>"; };
+		60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMultipleAppCell.swift; sourceTree = "<group>"; };
+		60CF13002641DDED00707FD7 /* BaseTodayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTodayCell.swift; sourceTree = "<group>"; };
 		60EC65A1262623D800F6BEA1 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		60ECD9B1261F925C00502849 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		60ECD9B4261F954E00502849 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 				607AD4B0263A14B5009E2088 /* TodayCell.swift */,
 				60FC35BF263B6951004A9F49 /* AppFullscreenDescriptionCell.swift */,
 				6070B77A263CB248005815C6 /* AppFullscreenHeaderCell.swift */,
+				60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */,
+				60CF13002641DDED00707FD7 /* BaseTodayCell.swift */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -409,6 +415,7 @@
 				60FF1934259A9F02008C451C /* UIView+Layout.swift in Sources */,
 				60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */,
 				60920DE82630CFBB000AEC46 /* PreviewScreenshotsController.swift in Sources */,
+				60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */,
 				60FF1938259AB992008C451C /* SearchResult.swift in Sources */,
 				6083B2C42594261E0008D5D4 /* BaseTabBarController.swift in Sources */,
 				607AD4B1263A14B5009E2088 /* TodayCell.swift in Sources */,
@@ -420,6 +427,7 @@
 				6070B77B263CB248005815C6 /* AppFullscreenHeaderCell.swift in Sources */,
 				60542713262A153500566BD7 /* HorizontalSnappingController.swift in Sources */,
 				60542716262A1CFD00566BD7 /* BetterSnappingLayout.swift in Sources */,
+				60CF12FE2641D14600707FD7 /* TodayMultipleAppCell.swift in Sources */,
 				60FF192825996408008C451C /* AppsSearchController.swift in Sources */,
 				60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */,
 				60FC35BD263B6418004A9F49 /* AppFullscreenController.swift in Sources */,
