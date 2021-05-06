@@ -107,10 +107,50 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         
         cell.todayItem = items[indexPath.item]
         
+        (cell as? TodayMultipleAppCell)?.multipleAppsController.collectionView.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(handleMultipleAppsTap)))
+        
+//        (cell as? TodayMultipleAppCell)?.multipleAppsController.collectionView.isUserInteractionEnabled = false
+
         return cell
     }
     
+    @objc fileprivate func handleMultipleAppsTap(gesture: UIGestureRecognizer) {
+
+        print("I'm Here")
+        let collectionView = gesture.view
+
+        var superview = collectionView?.superview
+
+        while superview != nil {
+            if let cell = superview as? TodayMultipleAppCell {
+
+                guard let indexPath = self.collectionView.indexPath(for: cell) else {return}
+
+                let apps = self.items[indexPath.item].apps
+
+                let fullController = TodayMultipleAppsController(mode: .fullscreen)
+                fullController.apps = apps
+
+                present(fullController, animated: true)
+                return
+            }
+            superview = superview?.superview
+        }
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if items[indexPath.item].cellType == .multiple {
+            let fullController = TodayMultipleAppsController(mode: .fullscreen)
+            fullController.apps = self.items[indexPath.item].apps
+            
+            // BackEnabledNavigationController is a custom navigationController.
+            // If we dont want to use this, just use a normal UINavigationController
+            let navigationController = BackEnabledNavigationController(rootViewController: fullController)
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
+            return
+        }
         
         let appFullscreenController = AppFullscreenController()
         appFullscreenController.todayItem = items[indexPath.row]
