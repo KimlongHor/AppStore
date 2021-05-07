@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
+class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
     var items = [TodayItem]()
     
@@ -23,10 +23,9 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     var appFullscreenController: AppFullscreenController!
     
-    var topConstraint: NSLayoutConstraint?
-    var leadingConstraint: NSLayoutConstraint?
-    var heightConstraint: NSLayoutConstraint?
-    var widthConstraint: NSLayoutConstraint?
+    var anchoredConstraint: AnchoredConstraints?
+    
+    let blurVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -34,6 +33,10 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.addSubview(blurVisualEffectView)
+        blurVisualEffectView.fillSuperview()
+        blurVisualEffectView.alpha = 0
         
         view.addSubview(activityIndicatorView)
         activityIndicatorView.centerInSuperview()
@@ -138,74 +141,145 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         }
     }
     
+    fileprivate func showDailyListFullScreen(_ indexPath: IndexPath) {
+        let fullController = TodayMultipleAppsController(mode: .fullscreen)
+        fullController.apps = self.items[indexPath.item].apps
+        
+        // BackEnabledNavigationController is a custom navigationController.
+        // If we dont want to use this, just use a normal UINavigationController
+        let navigationController = BackEnabledNavigationController(rootViewController: fullController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true)
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if items[indexPath.item].cellType == .multiple {
-            let fullController = TodayMultipleAppsController(mode: .fullscreen)
-            fullController.apps = self.items[indexPath.item].apps
-            
-            // BackEnabledNavigationController is a custom navigationController.
-            // If we dont want to use this, just use a normal UINavigationController
-            let navigationController = BackEnabledNavigationController(rootViewController: fullController)
-            navigationController.modalPresentationStyle = .fullScreen
-            present(navigationController, animated: true)
-            return
+        switch items[indexPath.item].cellType {
+        case .multiple:
+            showDailyListFullScreen(indexPath)
+        default:
+            showSingleAppFullscreen(indexPath)
         }
-        
+    }
+    
+    fileprivate func setupAppFullscreenController(_ indexPath: IndexPath) {
         let appFullscreenController = AppFullscreenController()
         appFullscreenController.todayItem = items[indexPath.row]
         appFullscreenController.dismissHandler = {
-            self.handleRemoveRedView()
+            self.handleAppFullscreenDismissal()
         }
-        
-        let fullscreenView = appFullscreenController.view!
-        fullscreenView.layer.cornerRadius = 16
-        view.addSubview(fullscreenView)
-        
-        
-        // We need to use this function because we dont use navbar.push to push this controller.
-        // Also note that, if we add a child controller, we need to clean it afterward. (look at handleRemoveRedView func to see how to clean it)
-        addChild(appFullscreenController)
         
         self.appFullscreenController = appFullscreenController
         
-        self.collectionView.isUserInteractionEnabled = false
         
+        
+        // Step 1: setup our pan gesture
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag))
+            // We conform this delegate and call gestureReconizer(shouldRecognizeSimultaneouslyWith), because we dont want the new gesture to override the tableview scrolling gesture
+        gesture.delegate = self
+        appFullscreenController.view.addGestureRecognizer(gesture)
+        
+        // Step 2: add a blur effect view
+        
+        
+        // Step 3: not to interfere with our UITableView scrolling
+        
+        
+    }
+    
+    var appFullscreenBeginOffset: CGFloat = 0
+    
+    @objc fileprivate func handleDrag(gesture: UIPanGestureRecognizer) {
+        
+        if gesture.state == .began {
+            appFullscreenBeginOffset = appFullscreenController.tableView.contentOffset.y
+        }
+        
+        if appFullscreenController.tableView.contentOffset.y > 0 {
+            return
+        }
+        
+        let translationY = gesture.translation(in: appFullscreenController.view).y
+        print(translationY)
+        
+        if gesture.state == .changed {
+            if translationY > 0 {
+                let trueOffset = translationY - appFullscreenBeginOffset
+                
+                var scale = 1 - trueOffset / 1000
+                scale = min(1, scale)
+                scale = max(0.5, scale)
+                
+                let transform: CGAffineTransform = .init(scaleX: scale, y: scale)
+                self.appFullscreenController.view.transform = transform
+            }
+        } else if gesture.state == .ended {
+            if translationY > 0 {
+                handleAppFullscreenDismissal()
+            }
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    fileprivate func startingCellFrame(_ indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         
         // absolute coordinates of cell
         guard let startingFrame = cell.superview?.convert(cell.frame, to: nil) else {return}
         
         self.startingFrame = startingFrame
+    }
+    
+    fileprivate func setupAppFullscreenStartingPosition(_ indexPath: IndexPath) {
+        let fullscreenView = appFullscreenController.view!
+        fullscreenView.layer.cornerRadius = 16
+        view.addSubview(fullscreenView)
         
+        // We need to use this function because we dont use navbar.push to push this controller.
+        // Also note that, if we add a child controller, we need to clean it afterward. (look at handleRemoveRedView func to see how to clean it)
+        addChild(appFullscreenController)
+        
+        self.collectionView.isUserInteractionEnabled = false
+        
+        
+        startingCellFrame(indexPath)
+        
+        guard let startingFrame = self.startingFrame else {return}
         
         // auto layout constraint animations --
         
-        fullscreenView.translatesAutoresizingMaskIntoConstraints = false
-        topConstraint = fullscreenView.topAnchor.constraint(equalTo: view.topAnchor, constant: startingFrame.origin.y)
-        leadingConstraint = fullscreenView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: startingFrame.origin.x)
-        widthConstraint = fullscreenView.widthAnchor.constraint(equalToConstant: startingFrame.width)
-        heightConstraint = fullscreenView.heightAnchor.constraint(equalToConstant: startingFrame.height)
+        self.anchoredConstraint = fullscreenView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: startingFrame.origin.y, left: startingFrame.origin.x, bottom: 0, right: 0), size: .init(width: startingFrame.width, height: startingFrame.height))
         
-        
-        [topConstraint, leadingConstraint, widthConstraint, heightConstraint].forEach({$0?.isActive = true})
+//        fullscreenView.translatesAutoresizingMaskIntoConstraints = false
+//        topConstraint = fullscreenView.topAnchor.constraint(equalTo: view.topAnchor, constant: startingFrame.origin.y)
+//        leadingConstraint = fullscreenView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: startingFrame.origin.x)
+//        widthConstraint = fullscreenView.widthAnchor.constraint(equalToConstant: startingFrame.width)
+//        heightConstraint = fullscreenView.heightAnchor.constraint(equalToConstant: startingFrame.height)
+//
+//
+//        [topConstraint, leadingConstraint, widthConstraint, heightConstraint].forEach({$0?.isActive = true})
         
         self.view.layoutIfNeeded()
         
         // -- end
-        
+    }
+    
+    fileprivate func beginAnimationAppFullscreen() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
 
-            self.topConstraint?.constant = 0
-            self.leadingConstraint?.constant = 0
-            self.widthConstraint?.constant = self.view.frame.width
-            self.heightConstraint?.constant = self.view.frame.height
+            self.blurVisualEffectView.alpha = 1
+            
+            self.anchoredConstraint?.top?.constant = 0
+            self.anchoredConstraint?.leading?.constant = 0
+            self.anchoredConstraint?.width?.constant = self.view.frame.width
+            self.anchoredConstraint?.height?.constant = self.view.frame.height
             
             self.view.layoutIfNeeded() // starts animation
             
             self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
-            
-            
             
             guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0,0]) as? AppFullscreenHeaderCell else {return}
             
@@ -213,23 +287,37 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             cell.layoutIfNeeded()
             
         }, completion: nil)
+    }
+    
+    fileprivate func showSingleAppFullscreen( _ indexPath: IndexPath) {
+        
+        // Step 1:
+        setupAppFullscreenController(indexPath)
+        
+        // Step 2: setup fullscreen in its starting position
+        setupAppFullscreenStartingPosition(indexPath)
+        
+        // Setp 3: begin the fullscreen animation
+        beginAnimationAppFullscreen()
 
     }
     
-    
-    
-    @objc func handleRemoveRedView() {
+    @objc func handleAppFullscreenDismissal() {
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             
             self.appFullscreenController.tableView.scrollToRow(at: [0,0], at: .top, animated: true)
             
+            self.blurVisualEffectView.alpha = 0
+            
+            self.appFullscreenController.view.transform = .identity
+            
             guard let startingFrame = self.startingFrame else {return}
             
-            self.topConstraint?.constant = startingFrame.origin.y
-            self.leadingConstraint?.constant = startingFrame.origin.x
-            self.widthConstraint?.constant = startingFrame.width
-            self.heightConstraint?.constant = startingFrame.height
+            self.anchoredConstraint?.top?.constant = startingFrame.origin.y
+            self.anchoredConstraint?.leading?.constant = startingFrame.origin.x
+            self.anchoredConstraint?.width?.constant = startingFrame.width
+            self.anchoredConstraint?.height?.constant = startingFrame.height
             self.view.layoutIfNeeded()
             
             if let tabBarFrame = self.tabBarController?.tabBar.frame {
@@ -238,6 +326,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             
             
             guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0,0]) as? AppFullscreenHeaderCell else {return}
+            
+            cell.closeButton.alpha = 0
             
             cell.todayCell.topConstraint.constant = 24
             cell.layoutIfNeeded()
