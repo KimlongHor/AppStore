@@ -119,7 +119,6 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
     
     @objc fileprivate func handleMultipleAppsTap(gesture: UIGestureRecognizer) {
 
-        print("I'm Here")
         let collectionView = gesture.view
 
         var superview = collectionView?.superview
@@ -327,8 +326,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
             
             guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0,0]) as? AppFullscreenHeaderCell else {return}
             
-            cell.closeButton.alpha = 0
-            
+//            cell.closeButton.alpha = 0
+            self.appFullscreenController.closeButton.alpha = 0
             cell.todayCell.topConstraint.constant = 24
             cell.layoutIfNeeded()
             
