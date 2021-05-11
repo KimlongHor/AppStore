@@ -39,6 +39,7 @@
 		60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C9E0DC262E0CC0009D770B /* AppDetailController.swift */; };
 		60CF12FE2641D14600707FD7 /* TodayMultipleAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */; };
 		60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF13002641DDED00707FD7 /* BaseTodayCell.swift */; };
+		60EC2C9D264B4BA3003DD12A /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2C9C264B4BA3003DD12A /* MusicController.swift */; };
 		60EC65A2262623D800F6BEA1 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC65A1262623D800F6BEA1 /* AppGroup.swift */; };
 		60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B1261F925C00502849 /* AppsPageController.swift */; };
 		60ECD9B5261F954E00502849 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B4261F954E00502849 /* BaseListController.swift */; };
@@ -91,6 +92,7 @@
 		60C9E0DC262E0CC0009D770B /* AppDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailController.swift; sourceTree = "<group>"; };
 		60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMultipleAppCell.swift; sourceTree = "<group>"; };
 		60CF13002641DDED00707FD7 /* BaseTodayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTodayCell.swift; sourceTree = "<group>"; };
+		60EC2C9C264B4BA3003DD12A /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		60EC65A1262623D800F6BEA1 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		60ECD9B1261F925C00502849 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		60ECD9B4261F954E00502849 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
@@ -222,6 +224,14 @@
 			path = Details;
 			sourceTree = "<group>";
 		};
+		60EC2C9B264B4B8A003DD12A /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				60EC2C9C264B4BA3003DD12A /* MusicController.swift */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
 		60ECD9B0261F924000502849 /* Apps */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +254,7 @@
 		60FF1926259963A1008C451C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				60EC2C9B264B4B8A003DD12A /* Music */,
 				607AD4AB263A1414009E2088 /* Today */,
 				60ECD9B7261F95E800502849 /* Search */,
 				60ECD9B0261F924000502849 /* Apps */,
@@ -442,6 +453,7 @@
 				60FF192825996408008C451C /* AppsSearchController.swift in Sources */,
 				60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */,
 				60FC35BD263B6418004A9F49 /* AppFullscreenController.swift in Sources */,
+				60EC2C9D264B4BA3003DD12A /* MusicController.swift in Sources */,
 				60FF192C2599687D008C451C /* SearchResultCell.swift in Sources */,
 				6021AC512624D2D8007B8FC2 /* AppsHeaderHorizontalController.swift in Sources */,
 				6021AC4E2624D105007B8FC2 /* AppsPageHeader.swift in Sources */,
