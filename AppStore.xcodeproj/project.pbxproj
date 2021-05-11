@@ -40,6 +40,8 @@
 		60CF12FE2641D14600707FD7 /* TodayMultipleAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */; };
 		60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF13002641DDED00707FD7 /* BaseTodayCell.swift */; };
 		60EC2C9D264B4BA3003DD12A /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2C9C264B4BA3003DD12A /* MusicController.swift */; };
+		60EC2CA2264B4D27003DD12A /* TrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2CA1264B4D27003DD12A /* TrackCell.swift */; };
+		60EC2CA5264B4F53003DD12A /* MusicLoadingFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2CA4264B4F53003DD12A /* MusicLoadingFooter.swift */; };
 		60EC65A2262623D800F6BEA1 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC65A1262623D800F6BEA1 /* AppGroup.swift */; };
 		60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B1261F925C00502849 /* AppsPageController.swift */; };
 		60ECD9B5261F954E00502849 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ECD9B4261F954E00502849 /* BaseListController.swift */; };
@@ -93,6 +95,8 @@
 		60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMultipleAppCell.swift; sourceTree = "<group>"; };
 		60CF13002641DDED00707FD7 /* BaseTodayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTodayCell.swift; sourceTree = "<group>"; };
 		60EC2C9C264B4BA3003DD12A /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
+		60EC2CA1264B4D27003DD12A /* TrackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackCell.swift; sourceTree = "<group>"; };
+		60EC2CA4264B4F53003DD12A /* MusicLoadingFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLoadingFooter.swift; sourceTree = "<group>"; };
 		60EC65A1262623D800F6BEA1 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		60ECD9B1261F925C00502849 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		60ECD9B4261F954E00502849 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
@@ -232,6 +236,15 @@
 			path = Music;
 			sourceTree = "<group>";
 		};
+		60EC2CA0264B4D1A003DD12A /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				60EC2CA1264B4D27003DD12A /* TrackCell.swift */,
+				60EC2CA4264B4F53003DD12A /* MusicLoadingFooter.swift */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
 		60ECD9B0261F924000502849 /* Apps */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +281,7 @@
 		60FF192A25996839008C451C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				60EC2CA0264B4D1A003DD12A /* Music */,
 				607AD4AF263A14A4009E2088 /* Today */,
 				608ECF3A262100460002FEFA /* Apps */,
 				60FF192B2599687D008C451C /* SearchResultCell.swift */,
@@ -438,6 +452,7 @@
 				60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */,
 				60FF1938259AB992008C451C /* SearchResult.swift in Sources */,
 				6083B2C42594261E0008D5D4 /* BaseTabBarController.swift in Sources */,
+				60EC2CA5264B4F53003DD12A /* MusicLoadingFooter.swift in Sources */,
 				607AD4B1263A14B5009E2088 /* TodayCell.swift in Sources */,
 				6083B2B3259420E00008D5D4 /* ViewController.swift in Sources */,
 				6083B2AF259420E00008D5D4 /* AppDelegate.swift in Sources */,
@@ -456,6 +471,7 @@
 				60EC2C9D264B4BA3003DD12A /* MusicController.swift in Sources */,
 				60FF192C2599687D008C451C /* SearchResultCell.swift in Sources */,
 				6021AC512624D2D8007B8FC2 /* AppsHeaderHorizontalController.swift in Sources */,
+				60EC2CA2264B4D27003DD12A /* TrackCell.swift in Sources */,
 				6021AC4E2624D105007B8FC2 /* AppsPageHeader.swift in Sources */,
 				60FF193D259ABD08008C451C /* Service.swift in Sources */,
 				604F0A572633413D00B8FCD7 /* ReviewsController.swift in Sources */,
