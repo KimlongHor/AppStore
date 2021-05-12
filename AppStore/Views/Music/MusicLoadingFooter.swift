@@ -12,7 +12,7 @@ class MusicLoadingFooter: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let aiv = UIActivityIndicatorView(style: .whiteLarge)
+        let aiv = UIActivityIndicatorView(style: .large)
         aiv.color = .darkGray
         aiv.startAnimating()
         
