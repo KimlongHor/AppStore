@@ -14,7 +14,7 @@ class MusicController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     var results = [Result]()
     
-    var searchTerm = "Justin"
+    var searchTerm = "Taylor"
     
     override func viewDidLoad() {
         super.viewDidLoad()
