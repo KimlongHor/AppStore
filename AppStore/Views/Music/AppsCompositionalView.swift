@@ -9,6 +9,10 @@ import SwiftUI
 
 class CompositionalController: UICollectionViewController {
     
+    var groups = [AppGroup]()
+    var socialApps = [SocialApp]()
+    let headerId = "headerId"
+    
     init() {
         
         let layout = UICollectionViewCompositionalLayout { (sectionNumber, _) -> NSCollectionLayoutSection? in
@@ -32,6 +36,12 @@ class CompositionalController: UICollectionViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.contentInsets.leading = 16
+        
+        let kind = UICollectionView.elementKindSectionHeader
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: kind, alignment: .topLeading)
+        ]
+        
         return section
     }
     
@@ -53,19 +63,95 @@ class CompositionalController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.register(CompositionalHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView.register(AppsHeaderCell.self, forCellWithReuseIdentifier: "cellId")
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "smallCellId")
+        collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: "smallCellId")
+        
         collectionView.backgroundColor = .systemBackground
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        fetchApp ()
+    }
+    
+    var games: AppGroup?
+    
+    
+    private func fetchApp () {
+        var group1: AppGroup?
+        var group2: AppGroup?
+        var group3: AppGroup?
+        
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        Service.shared.fetchSocialApps { (apps, error) in
+            dispatchGroup.leave()
+            if let error = error {
+                print("Failed fetching social app", error)
+                return
+            }
+            
+            self.socialApps = apps ?? []
+        }
+        
+        dispatchGroup.enter()
+        Service.shared.fetchGames { (appGroup, error) in
+            dispatchGroup.leave()
+            if let error = error {
+                print("Failed fetching games", error)
+                return
+            }
+            group1 = appGroup
+        }
+        
+        dispatchGroup.enter()
+        Service.shared.fetchTopGrossing { (appGroup, error) in
+            dispatchGroup.leave()
+            if let error = error {
+                print("Failed fetching top grossing", error)
+                return
+            }
+            group2 = appGroup
+        }
+        
+        dispatchGroup.enter()
+        Service.shared.fetchTopFreeApp { (appGroup, error) in
+            dispatchGroup.leave()
+            if let error = error {
+                print("Failed fetching top free app", error)
+                return
+            }
+            group3 = appGroup
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            if let group = group1 {
+                self.groups.append(group)
+            }
+            
+            if let group = group2 {
+                self.groups.append(group)
+            }
+            
+            if let group = group3 {
+                self.groups.append(group)
+            }
+            
+            self.collectionView.reloadData()
+        }
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return groups.count + 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 8
+        if section == 0 {
+            return socialApps.count
+        } else {
+            return groups[section - 1].feed.results.count
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -74,11 +160,56 @@ class CompositionalController: UICollectionViewController {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! AppsHeaderCell
             
+            let socialApp = self.socialApps[indexPath.item]
+            cell.titleLabel.text = socialApp.tagline
+            cell.companyLabel.text = socialApp.name
+            cell.imageView.sd_setImage(with: URL(string: socialApp.imageUrl))
+            
             return cell
         default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath)
-            cell.backgroundColor = .blue
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath) as! AppRowCell
+            
+            let app = groups[indexPath.section - 1].feed.results[indexPath.item]
+            cell.companyLabel.text = app.artistName
+            cell.nameLabel.text = app.name
+            cell.imageView.sd_setImage(with: URL(string: app.artworkUrl100))
             return cell
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let appId: String
+        
+        if indexPath.section == 0 {
+            appId = socialApps[indexPath.item].id
+            
+        } else {
+            appId = groups[indexPath.section - 1].feed.results[indexPath.item].id
+        }
+        
+        let appDetailController = AppDetailController(appId: appId)
+        navigationController?.pushViewController(appDetailController, animated: true)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let headerCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+
+        return headerCell
+    }
+    
+    class CompositionalHeader: UICollectionReusableView {
+        
+        let label = UILabel(text: "Editor's Choice Games", font: .boldSystemFont(ofSize: 32))
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            addSubview(label)
+            label.fillSuperview()
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
     }
 }
