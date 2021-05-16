@@ -9,6 +9,14 @@ import UIKit
 
 class AppRowCell: UICollectionViewCell {
     
+    var app: FeedResult? {
+        didSet {
+            imageView.sd_setImage(with: URL(string: app?.artworkUrl100 ?? ""))
+            nameLabel.text = app?.artistName
+            companyLabel.text = app?.name
+        }
+    }
+    
     let imageView = UIImageView(cornerRadius: 8)
     
     let nameLabel = UILabel(text: "App Name", font: .systemFont(ofSize: 20))

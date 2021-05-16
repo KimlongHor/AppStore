@@ -40,6 +40,7 @@
 		60C9E0DD262E0CC0009D770B /* AppDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C9E0DC262E0CC0009D770B /* AppDetailController.swift */; };
 		60CF12FE2641D14600707FD7 /* TodayMultipleAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */; };
 		60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CF13002641DDED00707FD7 /* BaseTodayCell.swift */; };
+		60E0B61026508D2F00341A26 /* AppsCompositionalViewDiffableDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0B60F26508D2F00341A26 /* AppsCompositionalViewDiffableDatasource.swift */; };
 		60EC2C9D264B4BA3003DD12A /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2C9C264B4BA3003DD12A /* MusicController.swift */; };
 		60EC2CA2264B4D27003DD12A /* TrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2CA1264B4D27003DD12A /* TrackCell.swift */; };
 		60EC2CA5264B4F53003DD12A /* MusicLoadingFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EC2CA4264B4F53003DD12A /* MusicLoadingFooter.swift */; };
@@ -96,6 +97,7 @@
 		60C9E0DC262E0CC0009D770B /* AppDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailController.swift; sourceTree = "<group>"; };
 		60CF12FD2641D14600707FD7 /* TodayMultipleAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMultipleAppCell.swift; sourceTree = "<group>"; };
 		60CF13002641DDED00707FD7 /* BaseTodayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTodayCell.swift; sourceTree = "<group>"; };
+		60E0B60F26508D2F00341A26 /* AppsCompositionalViewDiffableDatasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsCompositionalViewDiffableDatasource.swift; sourceTree = "<group>"; };
 		60EC2C9C264B4BA3003DD12A /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		60EC2CA1264B4D27003DD12A /* TrackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackCell.swift; sourceTree = "<group>"; };
 		60EC2CA4264B4F53003DD12A /* MusicLoadingFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLoadingFooter.swift; sourceTree = "<group>"; };
@@ -238,6 +240,14 @@
 			path = Details;
 			sourceTree = "<group>";
 		};
+		60E0B60E26508C9E00341A26 /* CompositionalDiffableDatasource */ = {
+			isa = PBXGroup;
+			children = (
+				60E0B60F26508D2F00341A26 /* AppsCompositionalViewDiffableDatasource.swift */,
+			);
+			path = CompositionalDiffableDatasource;
+			sourceTree = "<group>";
+		};
 		60EC2C9B264B4B8A003DD12A /* Music */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +268,7 @@
 		60ECD9B0261F924000502849 /* Apps */ = {
 			isa = PBXGroup;
 			children = (
+				60E0B60E26508C9E00341A26 /* CompositionalDiffableDatasource */,
 				6026F8D2264DAC1B00B2EB1C /* Compositional */,
 				60C9E0DB262E0CA2009D770B /* Details */,
 				60ECD9B1261F925C00502849 /* AppsPageController.swift */,
@@ -458,6 +469,7 @@
 				604F0A5A263342FA00B8FCD7 /* ReviewCell.swift in Sources */,
 				60C1E3AD2628C850001556F7 /* SocialApp.swift in Sources */,
 				60FF1934259A9F02008C451C /* UIView+Layout.swift in Sources */,
+				60E0B61026508D2F00341A26 /* AppsCompositionalViewDiffableDatasource.swift in Sources */,
 				60ECD9B2261F925C00502849 /* AppsPageController.swift in Sources */,
 				60920DE82630CFBB000AEC46 /* PreviewScreenshotsController.swift in Sources */,
 				60CF13012641DDED00707FD7 /* BaseTodayCell.swift in Sources */,

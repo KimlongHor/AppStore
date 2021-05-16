@@ -1,26 +1,27 @@
 //
-//  AppsCompositionalView.swift
+//  AppsCompositionalViewDiffableDatasource.swift
 //  AppStore
 //
-//  Created by horkimlong on 13/5/21.
+//  Created by horkimlong on 15/5/21.
 //
 
 import SwiftUI
 
-class CompositionalController: UICollectionViewController {
+class AppCompositionalController: UICollectionViewController {
     
     var groups = [AppGroup]()
     var socialApps = [SocialApp]()
     let headerId = "headerId"
+    var games: AppGroup?
     
     init() {
         
         let layout = UICollectionViewCompositionalLayout { (sectionNumber, _) -> NSCollectionLayoutSection? in
             
             if sectionNumber == 0 {
-                return CompositionalController.topSection()
+                return AppCompositionalController.topSection()
             } else {
-                return CompositionalController.secondSection()
+                return AppCompositionalController.secondSection()
             }
         }
         
@@ -71,12 +72,97 @@ class CompositionalController: UICollectionViewController {
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        fetchApp ()
+//        fetchApp ()
+        
+        setupDiffableDatasource()
     }
     
-    var games: AppGroup?
+    enum AppSection {
+        case topSocial
+        case grossing
+        case freeGames
+    }
     
+    // lazy var allow us to declare a variable that can access to self properties. In this case we can access to "self.collectionView"
+    lazy var diffableDatasource: UICollectionViewDiffableDataSource<AppSection, AnyHashable> = .init(collectionView: self.collectionView) { (collectionView, indexPath, object) -> UICollectionViewCell? in
+        
+        if let object = object as? SocialApp {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! AppsHeaderCell
+            
+            cell.app = object
+            return cell
+        } else if let object = object as? FeedResult {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath) as! AppRowCell
+            
+            cell.app = object
+            
+            return cell
+        }
+        
+        return nil
+    }
     
+    private func setupDiffableDatasource() {
+        
+        collectionView.dataSource = diffableDatasource
+        diffableDatasource.supplementaryViewProvider = .some({ (collectionView, kind, indexPath) -> UICollectionReusableView? in
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: self.headerId, for: indexPath) as! CompositionalHeader
+            
+            let snapshot = self.diffableDatasource.snapshot()
+            let object = self.diffableDatasource.itemIdentifier(for: indexPath)
+            
+            let section = snapshot.sectionIdentifier(containingItem: object!)!
+            
+            if section == .freeGames {
+                header.label.text = "Games"
+            } else {
+                header.label.text = "Top Grossing"
+            }
+            
+            
+            return header
+        })
+        
+        Service.shared.fetchSocialApps { (socialApps, error) in
+            
+            if let error = error {
+                print("Failed fetching social apps", error)
+                return
+            }
+            
+            Service.shared.fetchTopGrossing { (appGroup, error) in
+                if let error = error {
+                    print("Failed fetching topGrossing apps", error)
+                    return
+                }
+                
+                Service.shared.fetchGames { (gamesGroup, error) in
+                    if let error = error {
+                        print("Failed fetching games apps", error)
+                        return
+                    }
+                    
+                    var snapshot = self.diffableDatasource.snapshot()
+                    snapshot.appendSections([.topSocial, .grossing, .freeGames])
+                    
+                    // top social
+                    snapshot.appendItems(socialApps ?? [], toSection: .topSocial)
+                    
+                    // top grossing
+                    let appoObjects = appGroup?.feed.results ?? []
+                    snapshot.appendItems(appoObjects, toSection: .grossing)
+                    
+                    // game
+                    let gameObjects = gamesGroup?.feed.results ?? []
+                    snapshot.appendItems(gameObjects, toSection: .freeGames)
+                    
+                    self.diffableDatasource.apply(snapshot)
+                }
+                
+            }
+        }
+    }
+        
     private func fetchApp () {
         var group1: AppGroup?
         var group2: AppGroup?
@@ -143,54 +229,54 @@ class CompositionalController: UICollectionViewController {
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return groups.count + 1
+        return 0
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return socialApps.count
-        } else {
-            return groups[section - 1].feed.results.count
-        }
-    }
+//    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        if section == 0 {
+//            return socialApps.count
+//        } else {
+//            return groups[section - 1].feed.results.count
+//        }
+//    }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        switch indexPath.section {
-        case 0:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! AppsHeaderCell
-
-            let socialApp = self.socialApps[indexPath.item]
-            cell.titleLabel.text = socialApp.tagline
-            cell.companyLabel.text = socialApp.name
-            cell.imageView.sd_setImage(with: URL(string: socialApp.imageUrl))
-
-            return cell
-        default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath) as! AppRowCell
-
-            let app = groups[indexPath.section - 1].feed.results[indexPath.item]
-            cell.companyLabel.text = app.artistName
-            cell.nameLabel.text = app.name
-            cell.imageView.sd_setImage(with: URL(string: app.artworkUrl100))
-            return cell
-        }
-    }
+//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+//        switch indexPath.section {
+//        case 0:
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! AppsHeaderCell
+//
+//            let socialApp = self.socialApps[indexPath.item]
+//            cell.titleLabel.text = socialApp.tagline
+//            cell.companyLabel.text = socialApp.name
+//            cell.imageView.sd_setImage(with: URL(string: socialApp.imageUrl))
+//
+//            return cell
+//        default:
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath) as! AppRowCell
+//
+//            let app = groups[indexPath.section - 1].feed.results[indexPath.item]
+//            cell.companyLabel.text = app.artistName
+//            cell.nameLabel.text = app.name
+//            cell.imageView.sd_setImage(with: URL(string: app.artworkUrl100))
+//            return cell
+//        }
+//    }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        let appId: String
-
-        if indexPath.section == 0 {
-            appId = socialApps[indexPath.item].id
-
-        } else {
-            appId = groups[indexPath.section - 1].feed.results[indexPath.item].id
-        }
-
-        let appDetailController = AppDetailController(appId: appId)
-        navigationController?.pushViewController(appDetailController, animated: true)
-    }
+//    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//
+//        let appId: String
+//
+//        if indexPath.section == 0 {
+//            appId = socialApps[indexPath.item].id
+//
+//        } else {
+//            appId = groups[indexPath.section - 1].feed.results[indexPath.item].id
+//        }
+//
+//        let appDetailController = AppDetailController(appId: appId)
+//        navigationController?.pushViewController(appDetailController, animated: true)
+//    }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
@@ -214,9 +300,9 @@ class CompositionalController: UICollectionViewController {
     }
 }
 
-struct AppsView: UIViewControllerRepresentable {
+struct AppView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        let controller = CompositionalController()
+        let controller = AppCompositionalController()
         
         return UINavigationController(rootViewController: controller)
     }
@@ -227,9 +313,9 @@ struct AppsView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
 }
 
-struct AppsCompositionalView_Previews: PreviewProvider {
+struct AppCompositionalView_Previews: PreviewProvider {
     static var previews: some View {
-        AppsView()
+        AppView()
             .edgesIgnoringSafeArea(.all)
     }
 }
