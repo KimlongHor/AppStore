@@ -72,15 +72,44 @@ class AppCompositionalController: UICollectionViewController {
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        navigationItem.rightBarButtonItem = .init(title: "Fetch Top Free", style: .plain, target: self, action: #selector(handleFetchTopFree))
+        
 //        fetchApp ()
         
+        setupRefreshControl()
+        
         setupDiffableDatasource()
+    }
+    
+    fileprivate func setupRefreshControl() {
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+    }
+    
+    @objc func handleRefresh() {
+        collectionView.refreshControl?.endRefreshing()
+        
+        var snapshot = diffableDatasource.snapshot()
+        snapshot.deleteSections([.topFree])
+        
+        diffableDatasource.apply(snapshot)
+    }
+    
+    @objc func handleFetchTopFree() {
+        Service.shared.fetchTopFreeApp { (appGroup, error) in
+            var snapshot = self.diffableDatasource.snapshot()
+            snapshot.insertSections([.topFree], afterSection: .topSocial)
+            snapshot.appendItems(appGroup?.feed.results ?? [], toSection: .topFree)
+            
+            self.diffableDatasource.apply(snapshot)
+        }
     }
     
     enum AppSection {
         case topSocial
         case grossing
         case freeGames
+        case topFree
     }
     
     // lazy var allow us to declare a variable that can access to self properties. In this case we can access to "self.collectionView"
@@ -95,11 +124,34 @@ class AppCompositionalController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "smallCellId", for: indexPath) as! AppRowCell
             
             cell.app = object
+            cell.getButton.addTarget(self, action: #selector(self.handleGet), for: .primaryActionTriggered)
             
             return cell
         }
         
         return nil
+    }
+    
+    @objc func handleGet(button: UIView) {
+        
+        var superview = button.superview
+        
+        // i want to reach the parent cell of the get button
+        while superview != nil {
+            if let cell = superview as? UICollectionViewCell {
+                guard let indexPath = self.collectionView.indexPath(for: cell) else {
+                    return
+                }
+                guard let objectIClickOnto = diffableDatasource.itemIdentifier(for: indexPath) else {return}
+                
+                var snapshot = diffableDatasource.snapshot()
+                snapshot.deleteItems([objectIClickOnto])
+                diffableDatasource.apply(snapshot)
+            }
+            superview = superview?.superview
+        }
+        
+        
     }
     
     private func setupDiffableDatasource() {
@@ -115,8 +167,10 @@ class AppCompositionalController: UICollectionViewController {
             
             if section == .freeGames {
                 header.label.text = "Games"
-            } else {
+            } else if section == .grossing {
                 header.label.text = "Top Grossing"
+            } else {
+                header.label.text = "Top Free"
             }
             
             
@@ -230,6 +284,21 @@ class AppCompositionalController: UICollectionViewController {
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 0
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        var appId = ""
+        
+        let object = diffableDatasource.itemIdentifier(for: indexPath)
+        if let object = object as? SocialApp {
+            appId = object.id
+        } else if let object = object as? FeedResult {
+            appId = object.id
+        }
+        
+        let appDetailController = AppDetailController(appId: appId)
+        navigationController?.pushViewController(appDetailController, animated: true)
     }
     
 //    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
